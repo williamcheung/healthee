@@ -20,7 +20,7 @@ def read_parquet_files(directory):
         ddf = dd.read_parquet(directory)
         return ddf
     except FileNotFoundError:
-        print(f'Error: Directory '{directory}' not found.')
+        print(f'Error: Directory "{directory}" not found.')
         return None
     except Exception as e:
         print(f'Error reading Parquet files: {e}')
