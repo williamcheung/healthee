@@ -25,50 +25,25 @@ def read_root():
     <body>
         <h3>Select Cohorts to View Visualizations</h3>
 
-        <div class="dropdown-container">
-            <label for="dropdown1">Cohort:</label>
-            <select id="dropdown1" onchange="updateIframes(1)">
-                <option value="">Select Cohort</option>
-                {dropdown}
-            </select>
-        </div>
-        <div id="cohort1_iframes" style="display: none; margin-top: 20px;">
-            <div style="display: flex; justify-content: space-between;">
-                <iframe id="iframe1_1" width="33%" height="500px" frameborder="0"></iframe>
-                <iframe id="iframe1_2" width="33%" height="500px" frameborder="0"></iframe>
-                <iframe id="iframe1_3" width="33%" height="500px" frameborder="0"></iframe>
+        {"".join([
+            f'''
+            <div class="dropdown-container">
+                <label for="dropdown{i}">Cohort:</label>
+                <select id="dropdown{i}" onchange="updateIframes({i})">
+                    <option value="">Select Cohort</option>
+                    {dropdown}
+                </select>
             </div>
-        </div>
-
-        <div class="dropdown-container">
-            <label for="dropdown2">Cohort:</label>
-            <select id="dropdown2" onchange="updateIframes(2)">
-                <option value="">Select Cohort</option>
-                {dropdown}
-            </select>
-        </div>
-        <div id="cohort2_iframes" style="display: none; margin-top: 20px;">
-            <div style="display: flex; justify-content: space-between;">
-                <iframe id="iframe2_1" width="33%" height="500px" frameborder="0"></iframe>
-                <iframe id="iframe2_2" width="33%" height="500px" frameborder="0"></iframe>
-                <iframe id="iframe2_3" width="33%" height="500px" frameborder="0"></iframe>
+            <div id="cohort{i}_iframes" style="display: none; margin-top: 20px;">
+                <div style="display: flex; justify-content: space-between;">
+                    <iframe id="iframe{i}_1" width="33%" height="500px" frameborder="0"></iframe>
+                    <iframe id="iframe{i}_2" width="33%" height="500px" frameborder="0"></iframe>
+                    <iframe id="iframe{i}_3" width="33%" height="500px" frameborder="0"></iframe>
+                </div>
             </div>
-        </div>
-
-        <div class="dropdown-container">
-            <label for="dropdown3">Cohort:</label>
-            <select id="dropdown3" onchange="updateIframes(3)">
-                <option value="">Select Cohort</option>
-                {dropdown}
-            </select>
-        </div>
-        <div id="cohort3_iframes" style="display: none; margin-top: 20px;">
-            <div style="display: flex; justify-content: space-between;">
-                <iframe id="iframe3_1" width="33%" height="500px" frameborder="0"></iframe>
-                <iframe id="iframe3_2" width="33%" height="500px" frameborder="0"></iframe>
-                <iframe id="iframe3_3" width="33%" height="500px" frameborder="0"></iframe>
-            </div>
-        </div>
+            '''
+            for i in range(1, 11)
+        ])}
 
         <script>
             function updateIframes(cohortNumber) {{
