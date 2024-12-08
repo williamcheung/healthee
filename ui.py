@@ -11,11 +11,19 @@ app.mount("/html_files", StaticFiles(directory="./html_files"), name="html_files
 @app.get("/", response_class=HTMLResponse)
 def read_root():
     dropdown = ''.join([f'<option value="{i}">Cohort {i}</option>' for i in range(1, 11)])
+
+    preload_links = ''.join([
+        f'<link rel="preload" href="/html_files/member_access_by_state_{i}.html" as="document">'
+        f'<link rel="preload" href="/html_files/service_usage_by_race_{i}.html" as="document">'
+        f'<link rel="preload" href="/html_files/cost_by_race_{i}.html" as="document">' for i in range(1, 11)
+    ])
+
     return f"""
     <!DOCTYPE html>
     <html>
     <head>
         <title>Health Equity Explorer</title>
+        {preload_links}
         <style>
             .dropdown-container {{
                 margin-bottom: 10px;  /* Small gap between dropdowns */
@@ -50,9 +58,9 @@ def read_root():
             </div>
             <div id="cohort{i}_iframes" style="display: none; margin-top: 20px;">
                 <div style="display: flex; justify-content: space-between;">
-                    <iframe id="iframe{i}_1" width="33%" height="500px" frameborder="0"></iframe>
-                    <iframe id="iframe{i}_2" width="33%" height="500px" frameborder="0"></iframe>
-                    <iframe id="iframe{i}_3" width="33%" height="500px" frameborder="0"></iframe>
+                    <iframe id="iframe{i}_1" width="33%" height="500px" frameborder="0" loading="lazy"></iframe>
+                    <iframe id="iframe{i}_2" width="33%" height="500px" frameborder="0" loading="lazy"></iframe>
+                    <iframe id="iframe{i}_3" width="33%" height="500px" frameborder="0" loading="lazy"></iframe>
                 </div>
             </div>
             '''
