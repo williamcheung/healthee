@@ -15,7 +15,7 @@ def read_root():
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Cohort Visualizations</title>
+        <title>Health Equity Explorer</title>
         <style>
             .dropdown-container {{
                 margin-bottom: 10px;  /* Small gap between dropdowns */
@@ -26,7 +26,14 @@ def read_root():
         </style>
     </head>
     <body>
-        <h3>Select Cohorts to View Visualizations</h3>
+        <div style="display: flex; align-items: baseline;">
+            <h3 style="margin: 0;">Select Cohorts to View Visualizations</h3>
+
+            <span style="font-size: 90%; margin-left: 15px; line-height: 1.4;">
+                &#8226; Each cohort is a population of 100,000 except the 10th cohort which is 7,464.
+                The total population of the dataset is thus 907,464. &#8226;
+            </span>
+        </div>
 
         <div class="button-container">
             <button onclick="expandAll()">Expand all</button>
