@@ -20,10 +20,17 @@ def read_root():
             .dropdown-container {{
                 margin-bottom: 10px;  /* Small gap between dropdowns */
             }}
+            .button-container {{
+                margin: 20px 0; /* Margin around the button */
+            }}
         </style>
     </head>
     <body>
         <h3>Select Cohorts to View Visualizations</h3>
+
+        <div class="button-container">
+            <button onclick="expandAll()">Expand all</button>
+        </div>
 
         {"".join([
             f'''
@@ -62,6 +69,14 @@ def read_root():
                 document.getElementById('iframe' + cohortNumber + '_1').src = `/html_files/member_access_by_state_${{cohort}}.html`;
                 document.getElementById('iframe' + cohortNumber + '_2').src = `/html_files/service_usage_by_race_${{cohort}}.html`;
                 document.getElementById('iframe' + cohortNumber + '_3').src = `/html_files/cost_by_race_${{cohort}}.html`;
+            }}
+
+            function expandAll() {{
+                for (let i = 1; i <= 10; i++) {{
+                    const dropdown = document.getElementById('dropdown' + i);
+                    dropdown.value = i;  // Select cohort in dropdown
+                    updateIframes(i);  // Trigger the iframe update for the selected cohort
+                }}
             }}
         </script>
     </body>
