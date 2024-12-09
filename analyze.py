@@ -41,10 +41,12 @@ def main():
         if col in merged_ddf.columns:
             merged_ddf = merged_ddf.dropna(subset=[col])
 
-    # Convert relevant columns to appropriate datatypes
-    for col in ['MEM_RACE', 'MEM_ETHNICITY', 'MEM_AGE']:
+    # Convert relevant columns to appropriate datatypes.  Handle 'N+' values in MEM_AGE
+    for col in ['MEM_RACE', 'MEM_ETHNICITY']:
         if col in merged_ddf.columns:
           merged_ddf[col] = merged_ddf[col].astype(int)
+    if 'MEM_AGE' in merged_ddf.columns:
+        merged_ddf['MEM_AGE'] = merged_ddf['MEM_AGE'].astype(str).str.replace(r'(\d+)\+', lambda x: str(int(x.group(1)) + 1), regex=True).astype(int)
 
     # Race Mapping for better readability in plots
     race_mapping = {1: 'Asian', 2: 'Black', 3: 'Caucasian', 4: 'Other/Unknown'}
@@ -75,6 +77,22 @@ def main():
                                   title='Total Cost by Race',
                                   labels={'Race_Name': 'Race', 'AMT_PAID': 'Total Amount Paid'})
         fig_cost_by_race.write_html(f'{HTML_OUT_DIR}/cost_by_race_{cohort}.html')
+
+    # Gender Disparities Visualization
+    if 'MEM_GENDER' in merged_ddf.columns and 'SERVICE_LINE' in merged_ddf.columns:
+        service_usage_by_gender = merged_ddf.groupby('MEM_GENDER')['SERVICE_LINE'].count().compute().reset_index()
+        fig_service_usage_gender = px.bar(service_usage_by_gender, x='MEM_GENDER', y='SERVICE_LINE',
+                                          title='Service Usage by Gender',
+                                          labels={'MEM_GENDER': 'Gender', 'SERVICE_LINE': 'Number of Services'})
+        fig_service_usage_gender.write_html(f'{HTML_OUT_DIR}/service_usage_by_gender_{cohort}.html')
+
+    # Age Disparities Visualization
+    if 'MEM_AGE' in merged_ddf.columns and 'AMT_PAID' in merged_ddf.columns:
+        cost_by_age = merged_ddf.groupby('MEM_AGE')['AMT_PAID'].sum().compute().reset_index()
+        fig_cost_by_age = px.bar(cost_by_age, x='MEM_AGE', y='AMT_PAID',
+                                 title='Total Cost by Age',
+                                 labels={'MEM_AGE': 'Age', 'AMT_PAID': 'Total Amount Paid'})
+        fig_cost_by_age.write_html(f'{HTML_OUT_DIR}/cost_by_age_{cohort}.html')
 
 if __name__ == '__main__':
     main()
