@@ -102,6 +102,11 @@ def read_root():
                 }}
             }}
         </script>
+
+        <div style="text-align: left; margin-top: 30px; font-size: 14px; color: #666;">
+            Powered by data copyrighted by
+            <a href="https://www.milliman.com" target="_blank" style="color: #007bff; text-decoration: none;">Milliman MedInsight</a>.
+        </div>
     </body>
     </html>
     """
