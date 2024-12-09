@@ -165,6 +165,9 @@ cython_debug/
 codealike.json
 
 # app specific
+dataset/**
+!dataset/**/README.txt
+!dataset/**/split_rows.py
 
 ## for Docker
 Dockerfile
