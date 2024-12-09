@@ -15,7 +15,9 @@ def read_root():
     preload_links = ''.join([
         f'<link rel="preload" href="/html_files/member_access_by_state_{i}.html" as="document">'
         f'<link rel="preload" href="/html_files/service_usage_by_race_{i}.html" as="document">'
-        f'<link rel="preload" href="/html_files/cost_by_race_{i}.html" as="document">' for i in range(1, 11)
+        f'<link rel="preload" href="/html_files/cost_by_race_{i}.html" as="document">'
+        f'<link rel="preload" href="/html_files/service_usage_by_gender_{i}.html" as="document">'
+        f'<link rel="preload" href="/html_files/cost_by_age_{i}.html" as="document">' for i in range(1, 11)
     ])
 
     return f"""
@@ -58,9 +60,11 @@ def read_root():
             </div>
             <div id="cohort{i}_iframes" style="display: none; margin-top: 20px;">
                 <div style="display: flex; justify-content: space-between;">
-                    <iframe id="iframe{i}_1" width="33%" height="500px" frameborder="0" loading="lazy"></iframe>
-                    <iframe id="iframe{i}_2" width="33%" height="500px" frameborder="0" loading="lazy"></iframe>
-                    <iframe id="iframe{i}_3" width="33%" height="500px" frameborder="0" loading="lazy"></iframe>
+                    <iframe id="iframe{i}_1" width="20%" height="500px" frameborder="0" loading="lazy"></iframe>
+                    <iframe id="iframe{i}_2" width="20%" height="500px" frameborder="0" loading="lazy"></iframe>
+                    <iframe id="iframe{i}_3" width="20%" height="500px" frameborder="0" loading="lazy"></iframe>
+                    <iframe id="iframe{i}_4" width="20%" height="500px" frameborder="0" loading="lazy"></iframe>
+                    <iframe id="iframe{i}_5" width="20%" height="500px" frameborder="0" loading="lazy"></iframe>
                 </div>
             </div>
             '''
@@ -77,6 +81,8 @@ def read_root():
                     document.getElementById('iframe' + cohortNumber + '_1').src = '';
                     document.getElementById('iframe' + cohortNumber + '_2').src = '';
                     document.getElementById('iframe' + cohortNumber + '_3').src = '';
+                    document.getElementById('iframe' + cohortNumber + '_4').src = '';
+                    document.getElementById('iframe' + cohortNumber + '_5').src = '';
                     return;
                 }}
 
@@ -84,6 +90,8 @@ def read_root():
                 document.getElementById('iframe' + cohortNumber + '_1').src = `/html_files/member_access_by_state_${{cohort}}.html`;
                 document.getElementById('iframe' + cohortNumber + '_2').src = `/html_files/service_usage_by_race_${{cohort}}.html`;
                 document.getElementById('iframe' + cohortNumber + '_3').src = `/html_files/cost_by_race_${{cohort}}.html`;
+                document.getElementById('iframe' + cohortNumber + '_4').src = `/html_files/service_usage_by_gender_${{cohort}}.html`;
+                document.getElementById('iframe' + cohortNumber + '_5').src = `/html_files/cost_by_age_${{cohort}}.html`;
             }}
 
             function expandAll() {{
