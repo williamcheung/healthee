@@ -1,5 +1,6 @@
 import dask.dataframe as dd
 import dotenv
+import gc
 import os
 import pathlib
 import plotly.express as px
@@ -117,6 +118,44 @@ def main():
                                         title='Total Cost by Ethnicity',
                                         labels={'Ethnicity_Name': 'Ethnicity', 'AMT_PAID': 'Total Amount Paid'})
             fig_cost_by_ethnicity.write_html(f'{HTML_OUT_DIR}/cost_by_ethnicity_{cohort}.html')
+
+        # Diagnosis Disparities Visualization
+
+        if {'Race_Name', 'DIAG_CCS_1_LABEL', 'PRIMARY_PERSON_KEY', 'AMT_PAID'}.issubset(merged_ddf.columns):
+            diagnosis_distribution = merged_ddf.groupby(['Race_Name', 'DIAG_CCS_1_LABEL'])['PRIMARY_PERSON_KEY'].count().compute().reset_index()
+            diagnosis_codes = {label: i + 1 for i, label in enumerate(diagnosis_distribution['DIAG_CCS_1_LABEL'].unique())}
+            diagnosis_distribution['Diagnosis_Code'] = diagnosis_distribution['DIAG_CCS_1_LABEL'].map(diagnosis_codes)
+
+            # 1. Stacked Bar Chart: Diagnosis Distribution by Race
+            fig_diagnosis_distribution = px.bar(diagnosis_distribution, x='Race_Name', y='PRIMARY_PERSON_KEY', color='DIAG_CCS_1_LABEL',
+                                                barmode='stack', title='Diagnosis Distribution by Race',
+                                                labels={'Race_Name': 'Race', 'PRIMARY_PERSON_KEY': 'Count', 'DIAG_CCS_1_LABEL': 'Diagnosis'},
+                                                text='Diagnosis_Code', custom_data=['Diagnosis_Code', 'DIAG_CCS_1_LABEL'])
+            fig_diagnosis_distribution.update_traces(textposition='inside', textfont_size=10)
+            fig_diagnosis_distribution.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
+            new_names = [f'{code} - {label}' for code, label in diagnosis_codes.items()]
+            for i, name in enumerate(new_names):
+                fig_diagnosis_distribution.data[i].name = name
+            fig_diagnosis_distribution.update_traces(hovertemplate='Diagnosis Code: %{customdata[0]}<br>Diagnosis: %{customdata[1]}<br>Count: %{y}<extra></extra>')
+            fig_diagnosis_distribution.write_html(f'{HTML_OUT_DIR}/diagnosis_distribution_{cohort}.html')
+
+            # 2. Grouped Bar Chart: Average Cost by Diagnosis and Race
+            avg_cost_by_diagnosis = merged_ddf.groupby(['DIAG_CCS_1_LABEL', 'Race_Name'])['AMT_PAID'].mean().compute().reset_index()
+            avg_cost_by_diagnosis['Diagnosis_Code'] = avg_cost_by_diagnosis['DIAG_CCS_1_LABEL'].map(diagnosis_codes)
+            fig_avg_cost_by_diagnosis = px.bar(avg_cost_by_diagnosis, x='DIAG_CCS_1_LABEL', y='AMT_PAID', color='Race_Name',
+                                               barmode='group', title='Average Cost by Diagnosis and Race',
+                                               labels={'DIAG_CCS_1_LABEL': 'Diagnosis', 'AMT_PAID': 'Average Cost', 'Race_Name': 'Race'},
+                                               custom_data=['Diagnosis_Code', 'DIAG_CCS_1_LABEL'])
+            fig_avg_cost_by_diagnosis.update_traces(textposition='inside', textfont_size=10)
+            fig_avg_cost_by_diagnosis.update_traces(hovertemplate='Diagnosis Code: %{customdata[0]}<br>Diagnosis: %{customdata[1]}<br>Average Cost: %{y}<extra></extra>')
+            fig_avg_cost_by_diagnosis.write_html(f'{HTML_OUT_DIR}/avg_cost_by_diagnosis_{cohort}.html')
+
+            del merged_ddf
+            del diagnosis_distribution
+            del fig_diagnosis_distribution
+            del avg_cost_by_diagnosis
+            del fig_avg_cost_by_diagnosis
+            gc.collect()
 
 if __name__ == '__main__':
     main()
