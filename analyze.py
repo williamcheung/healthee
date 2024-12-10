@@ -98,6 +98,26 @@ def main():
                                     labels={'MEM_AGE': 'Age', 'AMT_PAID': 'Total Amount Paid'})
             fig_cost_by_age.write_html(f'{HTML_OUT_DIR}/cost_by_age_{cohort}.html')
 
+        # Ethnicity Disparities Visualization
+        ethnicity_mapping = {1: 'Hispanic', 2: 'Non-Hispanic', 3: 'Unknown'}
+
+        if 'MEM_ETHNICITY' in merged_ddf.columns:
+            merged_ddf['Ethnicity_Name'] = merged_ddf['MEM_ETHNICITY'].map(ethnicity_mapping, meta=('MEM_ETHNICITY', 'object'))
+
+        if 'Ethnicity_Name' in merged_ddf.columns and 'SERVICE_LINE' in merged_ddf.columns:
+            service_usage_by_ethnicity = merged_ddf.groupby('Ethnicity_Name')['SERVICE_LINE'].count().compute().reset_index()
+            fig_service_usage_ethnicity = px.bar(service_usage_by_ethnicity, x='Ethnicity_Name', y='SERVICE_LINE',
+                                                title='Service Usage by Ethnicity',
+                                                labels={'Ethnicity_Name': 'Ethnicity', 'SERVICE_LINE': 'Number of Services'})
+            fig_service_usage_ethnicity.write_html(f'{HTML_OUT_DIR}/service_usage_by_ethnicity_{cohort}.html')
+
+        if 'Ethnicity_Name' in merged_ddf.columns and 'AMT_PAID' in merged_ddf.columns:
+            cost_by_ethnicity = merged_ddf.groupby('Ethnicity_Name')['AMT_PAID'].sum().compute().reset_index()
+            fig_cost_by_ethnicity = px.bar(cost_by_ethnicity, x='Ethnicity_Name', y='AMT_PAID',
+                                        title='Total Cost by Ethnicity',
+                                        labels={'Ethnicity_Name': 'Ethnicity', 'AMT_PAID': 'Total Amount Paid'})
+            fig_cost_by_ethnicity.write_html(f'{HTML_OUT_DIR}/cost_by_ethnicity_{cohort}.html')
+
 if __name__ == '__main__':
     main()
     print('done')
