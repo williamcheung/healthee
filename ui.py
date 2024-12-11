@@ -64,6 +64,7 @@ def read_root():
                 <button class="new-tab-button" onclick="openDiagnosisCosts()">Diagnosis Costs</button>
                 <button class="new-tab-button" onclick="openIndividualsDiagnosed()">Individuals Diagnosed</button>
                 <button class="new-tab-button" onclick="openEthnicityComparisons()">Ethnicity Comparisons</button>
+                <button class="new-tab-button" onclick="openProviderAvailability()">Provider Availability</button>
             </div>
         </div>
 
@@ -453,6 +454,28 @@ def read_root():
                 `;
                 newWindow.document.body.appendChild(script);
 
+                newWindow.document.close();
+            }}
+
+            function openProviderAvailability() {{
+                const newWindow = window.open('', '_blank');
+                newWindow.document.open();
+
+                const iframeHtml = `
+                    <iframe src="/html_files/provider_availability_by_state.html" width="90%" height="800px" frameborder="0"></iframe>
+                `;
+
+                const html = `<!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Provider Availability</title>
+                </head>
+                <body>
+                    ${{iframeHtml}}
+                </body>
+                </html>`;
+
+                newWindow.document.write(html);
                 newWindow.document.close();
             }}
 
