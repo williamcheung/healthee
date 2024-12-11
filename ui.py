@@ -60,8 +60,8 @@ def read_root():
         <div class="button-container">
             <button class="expand-button" onclick="expandAll()">Expand all</button>
             <div class="button-group">
-                <button class="new-tab-button" onclick="openDiagnosisDistribution()">Diagnosis Distribution</button>
-                <button class="new-tab-button" onclick="openDiagnosisCost()">Diagnosis Cost</button>
+                <button class="new-tab-button" onclick="openDiagnosisDistributions()">Diagnosis Distributions</button>
+                <button class="new-tab-button" onclick="openDiagnosisCosts()">Diagnosis Costs</button>
             </div>
         </div>
 
@@ -118,7 +118,7 @@ def read_root():
                 }}
             }}
 
-            function openDiagnosisDistribution() {{
+            function openDiagnosisDistributions() {{
                 const newWindow = window.open('', '_blank');
                 newWindow.document.open();
                 const dropdown = ''.concat(...Array.from({{length: 10}}, (_, i) => `<option value="${{i + 1}}">Cohort ${{i + 1}}</option>`));
@@ -144,7 +144,7 @@ def read_root():
                 const html = `<!DOCTYPE html>
                 <html>
                 <head>
-                    <title>Diagnosis Distribution</title>
+                    <title>Diagnosis Distributions</title>
                     ${{preload_links}}
                     <style>
                         .dropdown-container {{ margin-bottom: 10px; }}
@@ -153,7 +153,7 @@ def read_root():
                 </head>
                 <body>
                     <div style="display: flex; align-items: baseline;">
-                        <h3 style="margin: 0;">Select Cohorts to View Diagnosis Distributions</h3>
+                        <h3 style="margin: 0;">Select Cohorts to View Diagnosis Distributionss</h3>
 
                         <span style="font-size: 90%; margin-left: 15px; line-height: 1.4;">
                             &#8226; Each cohort is a population of 100,000 except the 10th cohort which is 7,464.
@@ -201,7 +201,7 @@ def read_root():
                 newWindow.document.close();
             }}
 
-            function openDiagnosisCost() {{
+            function openDiagnosisCosts() {{
                 const newWindow = window.open('', '_blank');
                 newWindow.document.open();
                 const dropdown = ''.concat(...Array.from({{length: 10}}, (_, i) => `<option value="${{i + 1}}">Cohort ${{i + 1}}</option>`));
@@ -227,7 +227,7 @@ def read_root():
                 const html = `<!DOCTYPE html>
                 <html>
                 <head>
-                    <title>Diagnosis Cost</title>
+                    <title>Diagnosis Costs</title>
                     ${{preload_links}}
                     <style>
                         .dropdown-container {{ margin-bottom: 10px; }}
@@ -236,7 +236,7 @@ def read_root():
                 </head>
                 <body>
                     <div style="display: flex; align-items: baseline;">
-                        <h3 style="margin: 0;">Select Cohorts to View Diagnosis Costs</h3>
+                        <h3 style="margin: 0;">Select Cohorts to View Diagnosis Costss</h3>
 
                         <span style="font-size: 90%; margin-left: 15px; line-height: 1.4;">
                             &#8226; Each cohort is a population of 100,000 except the 10th cohort which is 7,464.
