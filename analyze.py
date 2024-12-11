@@ -150,6 +150,20 @@ def main():
             fig_avg_cost_by_diagnosis.update_traces(hovertemplate='Diagnosis Code: %{customdata[0]}<br>Diagnosis: %{customdata[1]}<br>Average Cost: %{y}<extra></extra>')
             fig_avg_cost_by_diagnosis.write_html(f'{HTML_OUT_DIR}/avg_cost_by_diagnosis_{cohort}.html')
 
+            # 3. Heatmap: Number of Unique Individuals Diagnosed by Race and Diagnosis
+            diagnosis_counts = merged_ddf.groupby(['Race_Name', 'DIAG_CCS_1_LABEL'])['PRIMARY_PERSON_KEY'].nunique().compute().unstack()
+
+            fig_diagnosis_heatmap = px.imshow(diagnosis_counts,
+                                              labels=dict(x='Race', y='Diagnosis', color='Count of Unique Individuals'),
+                                              title='Number of Unique Individuals Diagnosed by Race and Diagnosis',
+                                              color_continuous_scale='Viridis',
+                                              x=diagnosis_counts.columns,
+                                              y=diagnosis_counts.index)
+
+            fig_diagnosis_heatmap.update_traces(hovertemplate='Race: %{y}<br>Diagnosis: %{x}<br>Count: %{z}<extra></extra>')
+
+            fig_diagnosis_heatmap.write_html(f'{HTML_OUT_DIR}/diagnosis_heatmap_{cohort}.html')
+
             del merged_ddf
             del diagnosis_distribution
             del fig_diagnosis_distribution
